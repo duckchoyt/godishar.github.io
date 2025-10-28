@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Годишар - Културни Събития в България</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #636b2f 0%, #636b2f 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #fff;
+        }
+
+        .auth-buttons button {
+            background: white;
+            color: #636b2f;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .auth-buttons button:hover {
+            background: #c62828;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, white 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #c62828;
+        }
+
+        .welcome-banner h2 {
+            color: #636b2f;
+            margin-bottom: 0.5rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filters select, .filters input {
+            padding: 0.7rem;
+            border: 2px solid #636b2f;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #636b2f;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #636b2f 0%, #636b2f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-title {
+            color: #636b2f;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .event-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-meta span {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .event-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .rating {
+            color: #ffa000;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #636b2f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #636b2f;
+        }
+
+        .btn-secondary {
+            background: #c62828;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #b71c1c;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-top: 5px solid #636b2f;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #c62828;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #636b2f;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #636b2f;
+        }
+
+        .reviews {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .review {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 3px solid #636b2f;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-author {
+            font-weight: 600;
+            color: #636b2f;
+        }
+
+        .user-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 3px solid #c62828;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span><img src="Gemini_Generated_Image_kdtfhrkdtfhrkdtf-removebg-preview.png" width="100"></span>
+                <span>Годишар</span>
+            </div>
+            <div class="auth-buttons">
+                <span id="userDisplay" style="margin-right: 15px;"></span>
+                <button id="loginBtn" onclick="showLogin()">Вход</button>
+                <button id="registerBtn" onclick="showRegister()">Регистрация</button>
+                <button id="logoutBtn" onclick="logout()" style="display:none;">Изход</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-banner">
+            <h2>Добре дошли в Годишар!</h2>
+            <p>Вашият пътеводител за културните събития в България. Открийте фестивали, концерти, изложби и традиционни празници.</p>
+        </div>
+
+        <div class="filters">
+            <select id="categoryFilter" onchange="filterEvents()">
+                <option value="all">Всички категории</option>
+                <option value="Фестивал">Фестивал</option>
+                <option value="Концерт">Концерт</option>
+                <option value="Изложба">Изложба</option>
+                <option value="Традиция">Традиция</option>
+            </select>
+            <select id="cityFilter" onchange="filterEvents()">
+                <option value="all">Всички градове</option>
+                <option value="София">София</option>
+                <option value="Пловдив">Пловдив</option>
+                <option value="Варна">Варна</option>
+                <option value="Бургас">Бургас</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Търсене..." onkeyup="filterEvents()">
+        </div>
+
+        <div id="eventsContainer" class="events-grid"></div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="color: #636b2f; margin-bottom: 1.5rem;">Вход</h2>
+            <div class="form-group">
+                <label>Потребителско име:</label>
+                <input type="text" id="loginUsername" placeholder="Въведете потребителско име">
+            </div>
+            <div class="form-group">
+                <label>Парола:</label>
+                <input type="password" id="loginPassword" placeholder="Въведете парола">
+            </div>
+            <button class="btn btn-primary" onclick="login()" style="width: 100%;">Вход</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 style="color: #636b2f; margin-bottom: 1.5rem;">Регистрация</h2>
+            <div class="form-group">
+                <label>Потребителско име:</label>
+                <input type="text" id="regUsername" placeholder="Изберете потребителско име">
+            </div>
+            <div class="form-group">
+                <label>Парола:</label>
+                <input type="password" id="regPassword" placeholder="Изберете парола">
+            </div>
+            <button class="btn btn-primary" onclick="register()" style="width: 100%;">Регистрация</button>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('reviewModal')">&times;</span>
+            <h2 style="color: #636b2f; margin-bottom: 1.5rem;">Добави отзив</h2>
+            <div class="form-group">
+                <label>Оценка:</label>
+                <select id="reviewRating">
+                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                    <option value="3">⭐⭐⭐ (3)</option>
+                    <option value="2">⭐⭐ (2)</option>
+                    <option value="1">⭐ (1)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Коментар:</label>
+                <textarea id="reviewComment" rows="4" placeholder="Споделете вашето мнение..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitReview()" style="width: 100%;">Публикувай отзив</button>
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close" onclick="closeModal('eventModal')">&times;</span>
+            <div id="eventDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentEventId = null;
+        
+        const events = [
+            {
+                id: 1,
+                title: "Кукерски фестивал",
+                category: "Традиция",
+                city: "Пловдив",
+                date: "15 Януари 2025",
+                description: "Традиционен кукерски фестивал с участие на групи от цяла България. Вижте автентични кукерски костюми и ритуали.",
+                icon: "🎭",
+                reviews: []
+            },
+            {
+                id: 2,
+                title: "Роза Фест",
+                category: "Фестивал",
+                city: "Казанлък",
+                date: "1 Юни 2025",
+                description: "Празник на розата в сърцето на Розовата долина. Музика, танци и празненство с аромата на рози.",
+                icon: "🌹",
+                reviews: []
+            },
+            {
+                id: 3,
+                title: "Опера под звездите",
+                category: "Концерт",
+                city: "София",
+                date: "20 Юли 2025",
+                description: "Летен оперен фестивал в Античен театър Сердика с известни оперни изпълнители.",
+                icon: "🎵",
+                reviews: []
+            },
+            {
+                id: 4,
+                title: "Морски фестивал",
+                category: "Фестивал",
+                city: "Варна",
+                date: "15 Август 2025",
+                description: "Празник на морето с културни събития, концерти и изложби край морето.",
+                icon: "⛵",
+                reviews: []
+            },
+            {
+                id: 5,
+                title: "Виното и културата",
+                category: "Фестивал",
+                city: "Пловдив",
+                date: "10 Септември 2025",
+                description: "Дегустация на български вина, съчетана с културна програма и традиционна музика.",
+                icon: "🍷",
+                reviews: []
+            },
+            {
+                id: 6,
+                title: "Изложба на възрожденското изкуство",
+                category: "Изложба",
+                city: "София",
+                date: "1 Ноември 2025",
+                description: "Уникална колекция от български възрожденски картини и икони в Националната галерия.",
+                icon: "🖼️",
+                reviews: []
+            }
+        ];
+
+        const users = {};
+
+        function renderEvents(eventsToRender = events) {
+            const container = document.getElementById('eventsContainer');
+            container.innerHTML = '';
+
+            eventsToRender.forEach(event => {
+                const avgRating = calculateAverageRating(event);
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <div class="event-image">${event.icon}</div>
+                    <div class="event-content">
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-meta">
+                            <span>📍 ${event.city}</span>
+                            <span>📅 ${event.date}</span>
+                            <span>🏷️ ${event.category}</span>
+                        </div>
+                        <div class="event-description">${event.description}</div>
+                        <div class="rating">
+                            ${avgRating > 0 ? '⭐'.repeat(Math.round(avgRating)) + ` (${avgRating.toFixed(1)})` : 'Няма отзиви'}
+                        </div>
+                        <div class="event-actions">
+                            <button class="btn btn-primary" onclick="viewEvent(${event.id})">Виж повече</button>
+                            <button class="btn btn-secondary" onclick="openReviewModal(${event.id})">Отзив</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function calculateAverageRating(event) {
+            if (event.reviews.length === 0) return 0;
+            const sum = event.reviews.reduce((acc, review) => acc + review.rating, 0);
+            return sum / event.reviews.length;
+        }
+
+        function filterEvents() {
+            const category = document.getElementById('categoryFilter').value;
+            const city = document.getElementById('cityFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = events;
+
+            if (category !== 'all') {
+                filtered = filtered.filter(e => e.category === category);
+            }
+
+            if (city !== 'all') {
+                filtered = filtered.filter(e => e.city === city);
+            }
+
+            if (search) {
+                filtered = filtered.filter(e => 
+                    e.title.toLowerCase().includes(search) || 
+                    e.description.toLowerCase().includes(search)
+                );
+            }
+
+            renderEvents(filtered);
+        }
+
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function showRegister() {
+            document.getElementById('registerModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (users[username] && users[username] === password) {
+                currentUser = username;
+                updateAuthUI();
+                closeModal('loginModal');
+                alert('Успешен вход!');
+            } else {
+                alert('Грешно потребителско име или парола!');
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !password) {
+                alert('Моля, попълнете всички полета!');
+                return;
+            }
+
+            if (users[username]) {
+                alert('Потребителското име вече съществува!');
+                return;
+            }
+
+            users[username] = password;
+            alert('Успешна регистрация! Моля, влезте в профила си.');
+            closeModal('registerModal');
+        }
+
+        function logout() {
+            currentUser = null;
+            updateAuthUI();
+            alert('Успешен изход!');
+        }
+
+        function updateAuthUI() {
+            const userDisplay = document.getElementById('userDisplay');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (currentUser) {
+                userDisplay.textContent = `Здравей, ${currentUser}!`;
+                userDisplay.style.fontWeight = 'bold';
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+            } else {
+                userDisplay.textContent = '';
+                loginBtn.style.display = 'inline-block';
+                registerBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        function openReviewModal(eventId) {
+            if (!currentUser) {
+                alert('Моля, влезте в профила си, за да оставите отзив!');
+                showLogin();
+                return;
+            }
+            currentEventId = eventId;
+            document.getElementById('reviewModal').style.display = 'block';
+        }
+
+        function submitReview() {
+            const rating = parseInt(document.getElementById('reviewRating').value);
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!comment) {
+                alert('Моля, напишете коментар!');
+                return;
+            }
+
+            const event = events.find(e => e.id === currentEventId);
+            event.reviews.push({
+                author: currentUser,
+                rating: rating,
+                comment: comment,
+                date: new Date().toLocaleDateString('bg-BG')
+            });
+
+            closeModal('reviewModal');
+            document.getElementById('reviewComment').value = '';
+            renderEvents();
+            alert('Благодарим за отзива!');
+        }
+
+        function viewEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            const avgRating = calculateAverageRating(event);
+            
+            let reviewsHTML = '';
+            if (event.reviews.length > 0) {
+                reviewsHTML = '<div class="reviews"><h3 style="color: #2e7d32; margin-bottom: 1rem;">Отзиви:</h3>';
+                event.reviews.forEach(review => {
+                    reviewsHTML += `
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="review-author">${review.author}</span>
+                                <span style="color: #ffa000;">${'⭐'.repeat(review.rating)}</span>
+                            </div>
+                            <p>${review.comment}</p>
+                            <small style="color: #999;">${review.date}</small>
+                        </div>
+                    `;
+                });
+                reviewsHTML += '</div>';
+            } else {
+                reviewsHTML = '<p style="color: #999; margin-top: 1rem;">Все още няма отзиви за това събитие.</p>';
+            }
+
+            document.getElementById('eventDetails').innerHTML = `
+                <div style="text-align: center; font-size: 4rem; margin-bottom: 1rem;">${event.icon}</div>
+                <h2 style="color: #2e7d32; margin-bottom: 1rem;">${event.title}</h2>
+                <div class="event-meta" style="margin-bottom: 1.5rem;">
+                    <span>📍 ${event.city}</span>
+                    <span>📅 ${event.date}</span>
+                    <span>🏷️ ${event.category}</span>
+                </div>
+                <div class="rating" style="margin-bottom: 1rem;">
+                    ${avgRating > 0 ? '⭐'.repeat(Math.round(avgRating)) + ` (${avgRating.toFixed(1)} от ${event.reviews.length} отзива)` : 'Няма отзиви'}
+                </div>
+                <p style="line-height: 1.8; margin-bottom: 1.5rem;">${event.description}</p>
+                ${reviewsHTML}
+            `;
+            document.getElementById('eventModal').style.display = 'block';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        renderEvents();
+        updateAuthUI();
+    </script>
+</body>
+</html>
